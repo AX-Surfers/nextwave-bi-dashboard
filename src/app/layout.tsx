@@ -5,9 +5,14 @@ import { getCompany } from "@/lib/repository";
 import { koDate } from "@/lib/format";
 
 export const metadata: Metadata = {
-  title: "넥스트웨이브 경영 BI 대시보드",
+  title: "서퍼스 경영 BI 대시보드",
   description:
-    "(주)넥스트웨이브 2026년 7월 경영 데이터 — 매출·손익·자금·채권·영업·인사·프로젝트 통합 대시보드",
+    "(주)서퍼스 2026년 7월 경영 데이터 — 매출·손익·자금·채권·영업·인사·프로젝트 통합 대시보드",
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/icon.png",
+    apple: "/icon.png",
+  },
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {

@@ -323,7 +323,7 @@ for r in rows(wb["08_인사_직원명부"], last_row=48):
             "tenureMonths": months_between(hired, BASE_DATE),
             "employmentType": r["고용형태"],
             "annualSalary": r["연봉"] or 0,
-            "email": r["이메일"],
+            "email": (r["이메일"] or "").replace("@nextwave.co.kr", "@surfers.co.kr"),
             "status": r["재직상태"],
             "resignedAt": iso(r["퇴사일"]),
             "workplace": r["근무지"],
@@ -455,8 +455,8 @@ for r in rows(wb["12_업무_태스크"], last_row=97):
     )
 
 company = {
-    "name": "(주)넥스트웨이브",
-    "nameEn": "NextWave Co., Ltd.",
+    "name": "(주)서퍼스",
+    "nameEn": "Surfers Co., Ltd.",
     "industry": "스마트물류 SaaS 플랫폼 및 산업용 IoT 하드웨어",
     "hq": "경기도 성남시 분당구 판교로 255",
     "foundedAt": "2016-03-14",

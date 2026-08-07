@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -62,9 +63,9 @@ export function Sidebar({ company, period }: { company: string; period: string }
       {/* 모바일 헤더 */}
       <div className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-line bg-surface px-4 py-3 lg:hidden">
         <div className="flex items-center gap-2.5">
-          <Logo />
+          <Wordmark />
           <div>
-            <p className="text-sm font-semibold tracking-tight text-ink">{company}</p>
+            <p className="text-[11px] font-medium text-ink-secondary">{company}</p>
             <p className="text-[11px] text-ink-muted">{period}</p>
           </div>
         </div>
@@ -88,12 +89,10 @@ export function Sidebar({ company, period }: { company: string; period: string }
 
       {/* 데스크톱 사이드바 */}
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-60 flex-col border-r border-line bg-surface px-3 py-5 lg:flex">
-        <div className="mb-6 flex items-center gap-2.5 px-2">
-          <Logo />
-          <div className="min-w-0">
-            <p className="truncate text-sm font-semibold tracking-tight text-ink">{company}</p>
-            <p className="text-[11px] text-ink-muted">경영 BI 대시보드</p>
-          </div>
+        <div className="mb-6 px-2">
+          <Wordmark />
+          <p className="mt-2 truncate text-xs font-medium text-ink-secondary">{company}</p>
+          <p className="text-[11px] text-ink-muted">경영 BI 대시보드</p>
         </div>
         <NavList />
         <div className="mt-auto rounded-lg border border-line bg-surface-2 px-3 py-2.5">
@@ -105,15 +104,15 @@ export function Sidebar({ company, period }: { company: string; period: string }
   );
 }
 
-function Logo() {
+function Wordmark() {
   return (
-    <span
-      className="grid size-8 shrink-0 place-items-center rounded-lg bg-s1 text-white"
-      aria-hidden
-    >
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="size-4">
-        <path d="M3 15c3 0 3-6 6-6s3 6 6 6 3-6 6-6" strokeLinecap="round" />
-      </svg>
-    </span>
+    <Image
+      src="/logo.png"
+      alt="Surfers"
+      width={326}
+      height={81}
+      priority
+      className="h-6 w-auto"
+    />
   );
 }
