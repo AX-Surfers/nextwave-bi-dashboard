@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 넥스트웨이브 경영 BI 대시보드
 
-## Getting Started
+`넥스트웨이브_경영데이터_2026-07.xlsx` (교육 실습용 가상 경영데이터)를 시각화하는 Next.js 대시보드입니다.
+로그인 없이 바로 대시보드가 열리고, 데이터는 전부 정적 JSON으로 번들되어 **서버·DB 없이 동작**합니다.
 
-First, run the development server:
+## 실행
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build && npm start   # 프로덕션 빌드 (전 페이지 정적 프리렌더)
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 화면 구성
 
-## Learn More
+| 경로 | 화면 | 내용 |
+|---|---|---|
+| `/` | 경영 요약 | 매출 히어로 지표, 이슈 알림, KPI 8종, 카테고리·손익구조·현금추이·채권연령·파이프라인 |
+| `/sales` | 매출 분석 | 일별 카테고리 누적 추이, 제품·거래처·담당자·채널·산업군·지역 드릴다운, 원장 테이블 |
+| `/finance` | 재무 / 손익 | 월간 손익계산서(당월/전월/증감/매출비), 판관비 구성, 부서별 비용, 자금 흐름, 미승인 전표 |
+| `/receivables` | 채권 관리 | 연령구간별 미수, 산업군·거래처별 미수, 담당자 회수율, 채권 원장 |
+| `/pipeline` | 영업 파이프라인 | 단계별 퍼널(가중 예상매출 병기), 담당자·산업군·채널·경쟁사, 활동 로그, 딜 목록 |
+| `/hr` | 인사 / 급여 | 부서·직급·근속·근무지 구성, 급여/공제 구성, 부서 종합, 근태·급여대장 |
+| `/projects` | 프로젝트 | 진행률 × 예산소진율 산점도, 리스크·태스크 상태, 프로젝트/지연 태스크 목록 |
 
-To learn more about Next.js, take a look at the following resources:
+## 구조
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/
+  app/                 페이지 (전부 서버 컴포넌트, async)
+  components/
+    charts/            recharts 기반 차트 (클라이언트 컴포넌트)
+    layout/            사이드바 · 페이지 헤더
+    ui/                Card · KpiCard · DataTable · Badge · Meter · AlertList
+  lib/
+    repository.ts      데이터 접근 계층 ← Supabase 전환 지점
+    types.ts           도메인 타입 (supabase/schema.sql 컬럼과 1:1)
+    aggregate.ts       집계 헬퍼 (순수 함수)
+    format.ts          숫자·통화·날짜 표기
+  data/*.json          엑셀에서 추출·계산한 정적 데이터
+scripts/etl.py         엑셀 → JSON 변환 스크립트
+supabase/schema.sql    Supabase 테이블 DDL + RLS(익명 읽기)
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 데이터 파이프라인
 
-## Deploy on Vercel
+원본 엑셀은 값이 아니라 **수식**으로 되어 있어(`SUMIFS` / `DATEDIF` / `INDEX-MATCH` 등) 셀에 캐시된 계산값이 없습니다.
+`scripts/etl.py`가 엑셀의 수식을 파이썬으로 그대로 재현해 계산 결과까지 담은 JSON을 만듭니다.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+python3 -m pip install openpyxl
+python3 scripts/etl.py          # → src/data/*.json 재생성
+XLSX_PATH=/path/to/other.xlsx python3 scripts/etl.py   # 원본 경로 지정
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+스크립트 마지막에 README 기대값 대조 결과를 출력합니다. 매출액·매출원가·판관비·영업이익·당기순이익·
+기말현금·총 미수금·파이프라인·가중예상·급여지급총액은 원본 문서 수치와 정확히 일치합니다.
+다만 **30일 초과 연체액(809,340,000원)** 과 **지연 태스크(46건)** 두 값은 원본 README의 요약
+수치(799,730,000원 / 34건)와 다릅니다. 이 대시보드는 엑셀 시트에 실제로 적힌 수식
+(`SUMIFS(미수금, 경과일수, ">30")`, `COUNTIFS(지연일수, ">0")`)을 그대로 계산한 값을 씁니다.
+
+### Supabase / Vercel 연결
+
+- **Supabase**: `supabase/schema.sql`을 SQL Editor에서 실행한 뒤, `src/lib/repository.ts`의 각 함수
+  본문만 supabase 쿼리로 교체하면 됩니다. 모든 함수가 이미 `async`이고 페이지는 서버 컴포넌트라
+  화면 코드는 수정할 필요가 없습니다. 환경변수는 `.env.example` 참고.
+- **Vercel**: 추가 설정 없이 배포됩니다. 현재 전 페이지가 정적 프리렌더(`○ Static`)되며,
+  Supabase 연결 후에는 필요한 페이지에만 `revalidate` 또는 `dynamic`을 지정하면 됩니다.
+
+## 시각화 규칙
+
+- 카테고리 색은 고정 순서 8슬롯(파랑 → 주황 → 아쿠아 → 노랑 → 마젠타 → 초록 → 보라 → 빨강)에서만 배정하고 순환시키지 않습니다.
+- 순서가 의미를 갖는 축(파이프라인 단계, 채권 연령, 근속 구간)은 단일 색상 순차 램프를 씁니다.
+- 상태색(good / warning / serious / critical)은 시리즈 색과 분리되어 있고, 항상 아이콘·등급 라벨과 함께 나옵니다.
+- 2개 이상 시리즈에는 항상 범례가 있으며, 값은 표 뷰에서 다시 확인할 수 있습니다.
+- 막대는 24px 상한 + 데이터 끝 4px 라운드, 선은 2px, 누적 요소 사이는 표면색 2px 간격으로 분리합니다.
+- 축은 0 기준선이 기본이며, 잔액처럼 0에서 시작하지 않는 선 그래프만 `baseline="auto"`를 씁니다.
+- 라이트/다크 모드 모두 별도 색 단계를 지정했고, 두 모드 모두 색각 이상 분리도 검증을 통과했습니다.
+
+## 주의
+
+회사·인물·거래처·금액은 전부 교육 실습용 가상 데이터입니다. 4대보험 요율과 소득세는 근사치이며,
+전월(2026-06) 실적·이자수익·법인세율은 비교용 가정값입니다.

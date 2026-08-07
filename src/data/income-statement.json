@@ -1,0 +1,185 @@
+{
+ "revenueLines": [
+  {
+   "label": "SaaS구독 매출",
+   "current": 352993000,
+   "previous": 318800000
+  },
+  {
+   "label": "하드웨어 매출",
+   "current": 765805000,
+   "previous": 736100000
+  },
+  {
+   "label": "용역 매출",
+   "current": 245627000,
+   "previous": 221600000
+  },
+  {
+   "label": "유지보수 매출",
+   "current": 142301000,
+   "previous": 135100000
+  }
+ ],
+ "cogsLines": [
+  {
+   "code": 451,
+   "label": "하드웨어매입원가",
+   "current": 520747000,
+   "previous": 518100000
+  },
+  {
+   "code": 452,
+   "label": "외주용역비",
+   "current": 117901000,
+   "previous": 117300000
+  },
+  {
+   "code": 453,
+   "label": "클라우드/인프라비",
+   "current": 107596000,
+   "previous": 100200000
+  }
+ ],
+ "sgaLines": [
+  {
+   "code": 511,
+   "label": "급여",
+   "current": 203547369,
+   "previous": 197600000
+  },
+  {
+   "code": 512,
+   "label": "상여금",
+   "current": 41000000,
+   "previous": 42400000
+  },
+  {
+   "code": 513,
+   "label": "퇴직급여충당금",
+   "current": 26500000,
+   "previous": 24900000
+  },
+  {
+   "code": 514,
+   "label": "복리후생비",
+   "current": 25999000,
+   "previous": 28000000
+  },
+  {
+   "code": 515,
+   "label": "여비교통비",
+   "current": 12001000,
+   "previous": 12800000
+  },
+  {
+   "code": 516,
+   "label": "접대비",
+   "current": 8399000,
+   "previous": 9000000
+  },
+  {
+   "code": 517,
+   "label": "통신비",
+   "current": 3100000,
+   "previous": 3300000
+  },
+  {
+   "code": 518,
+   "label": "소모품비",
+   "current": 5800000,
+   "previous": 6100000
+  },
+  {
+   "code": 519,
+   "label": "지급수수료",
+   "current": 31001000,
+   "previous": 33100000
+  },
+  {
+   "code": 520,
+   "label": "광고선전비",
+   "current": 68000000,
+   "previous": 61300000
+  },
+  {
+   "code": 521,
+   "label": "임차료",
+   "current": 34000000,
+   "previous": 36400000
+  },
+  {
+   "code": 522,
+   "label": "감가상각비",
+   "current": 22000000,
+   "previous": 20100000
+  },
+  {
+   "code": 523,
+   "label": "보험료",
+   "current": 4100000,
+   "previous": 3900000
+  },
+  {
+   "code": 524,
+   "label": "교육훈련비",
+   "current": 9000000,
+   "previous": 9300000
+  },
+  {
+   "code": 525,
+   "label": "세금과공과",
+   "current": 5900000,
+   "previous": 6100000
+  },
+  {
+   "code": 526,
+   "label": "차량유지비",
+   "current": 6300000,
+   "previous": 6100000
+  }
+ ],
+ "totals": {
+  "revenue": {
+   "current": 1506726000,
+   "previous": 1411600000
+  },
+  "cogs": {
+   "current": 746244000,
+   "previous": 735600000
+  },
+  "grossProfit": {
+   "current": 760482000,
+   "previous": 676000000
+  },
+  "sga": {
+   "current": 506647369,
+   "previous": 500400000
+  },
+  "operatingProfit": {
+   "current": 253834631,
+   "previous": 175600000
+  },
+  "interestIncome": {
+   "current": 2850000,
+   "previous": 2600000
+  },
+  "interestCost": {
+   "current": 8200000,
+   "previous": 7800000
+  },
+  "pretaxProfit": {
+   "current": 248484631,
+   "previous": 170400000
+  },
+  "tax": {
+   "current": 54666619.0,
+   "previous": 37488000.0
+  },
+  "netProfit": {
+   "current": 193818012.0,
+   "previous": 132912000.0
+  }
+ },
+ "taxRate": 0.22
+}
